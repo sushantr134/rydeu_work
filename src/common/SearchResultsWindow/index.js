@@ -10,8 +10,8 @@ export const SearchResults = ({ data, handleSearch }) => {
       <div className={styles.searchContainer}>
         <ul>
           {data.map((obj, i) => (
-            <li key={i} onClick={event => handleSearch(obj.name)}>
-              <h4>{obj.name}</h4>
+            <li key={i} onClick={event => handleSearch(obj)}>
+              <h4>{i}</h4>
               <h6>sasa</h6>
             </li>
           ))}

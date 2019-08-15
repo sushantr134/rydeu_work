@@ -4,39 +4,63 @@ import { CenterContainer } from "../../containers/CenterContainer";
 import { Input } from "../../common/Input";
 import styles from "./styles.module.scss";
 import { Grid } from "../../common/Grid";
-import { SearchResults } from "../../common/SearchResultsWindow";
+//import { SearchResults } from "../../common/SearchResultsWindow";
 
-const FormContent = ({ handleInput, handleSearch, stateData, SearchToggle }) => {
+import GoogleMapLoader from "react-google-maps-loader";
+import GooglePlacesSuggest from "react-google-places-suggest";
+
+const FormContent = ({ handleInput, handleSearch, stateData, SearchToggle, updateBookingState, updateSearchToggle }) => {
   return (
     <>
       <div style={{ position: "relative", marginBottom: "1em" }}>
         <span className={styles.FromIcon} />
-        <Input
-          placeholder='From (airport, address)'
-          formStateInputType={"fromLocation"}
-          onchange={handleInput}
-          type='text'
-          Grouped={true}
-          defaultValue={stateData.fromLocation}
-          style={{ paddingLeft: "50px" }}
+        <GoogleMapLoader
+          params={{
+            key: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
+            libraries: "places,geocode"
+          }}
+          render={googleMaps =>
+            googleMaps && (
+              <GooglePlacesSuggest
+                googleMaps={googleMaps}
+                autocompletionRequest={{
+                  input: stateData.searchText
+                }}
+                // Optional props
+                onSelectSuggest={(geocoded, original) => {
+                  handleInput(SearchToggle.mode, geocoded.formatted_address);
+                  updateBookingState({ searchText: "" });
+                }}>
+                <Input
+                  placeholder='From (airport, address)'
+                  formStateInputType={"fromLocation"}
+                  onchange={handleInput}
+                  type='text'
+                  Grouped={true}
+                  defaultValue={stateData.fromLocation}
+                  style={{ paddingLeft: "50px" }}
+                />
+                <span className={styles.RouteIcon} />
+                {/* {SearchToggle.mode === "fromLocation" && stateData.fromLocation.length > 0 && (
+                  <SearchResults handleSearch={handleSearch} data={stateData.searchData} />
+                )} */}
+                <Input
+                  placeholder='To (airport, address)'
+                  formStateInputType={"toLocation"}
+                  onchange={handleInput}
+                  type='text'
+                  Grouped={true}
+                  defaultValue={stateData.toLocation}
+                  style={{ paddingLeft: "50px" }}
+                />
+                <span className={styles.ToIcon} />
+                {/* {SearchToggle.mode === "toLocation" && stateData.toLocation.length > 0 && (
+                  <SearchResults handleSearch={handleSearch} data={stateData.searchData} />
+                )} */}
+              </GooglePlacesSuggest>
+            )
+          }
         />
-        <span className={styles.RouteIcon} />
-        {SearchToggle.mode === "fromLocation" && stateData.fromLocation.length > 0 && (
-          <SearchResults handleSearch={handleSearch} data={stateData.searchData} />
-        )}
-        <Input
-          placeholder='To (airport, address)'
-          formStateInputType={"toLocation"}
-          onchange={handleInput}
-          type='text'
-          Grouped={true}
-          defaultValue={stateData.toLocation}
-          style={{ paddingLeft: "50px" }}
-        />
-        <span className={styles.ToIcon} />
-        {SearchToggle.mode === "toLocation" && stateData.toLocation.length > 0 && (
-          <SearchResults handleSearch={handleSearch} data={stateData.searchData} />
-        )}
       </div>
 
       <label>Pickup time</label>
@@ -65,7 +89,8 @@ export const AirportBookingWindow = () => {
     pickUpTime: "",
     passengers: "",
     luggagePieces: "",
-    searchData: [{ id: "1", name: "hello munich" }]
+    searchText: "",
+    searchData: []
   });
 
   const [SearchToggle, updateSearchToggle] = useState({
@@ -77,10 +102,10 @@ export const AirportBookingWindow = () => {
   const handleInput = (type, value) => {
     if (type === "fromLocation" && value !== undefined) {
       updateSearchToggle({ mode: "fromLocation" });
-      updateBookingState({ ...BookingState, fromLocation: value });
+      updateBookingState({ ...BookingState, searchText: value, fromLocation: value });
     } else if (type === "toLocation" && value !== undefined) {
       updateSearchToggle({ mode: "toLocation" });
-      updateBookingState({ ...BookingState, toLocation: value });
+      updateBookingState({ ...BookingState, searchText: value, toLocation: value });
     } else if (type === "pickUpTime" && value !== undefined) {
       updateBookingState({ ...BookingState, pickUpTime: value });
     } else if (type === "passengers" && value !== undefined) {
@@ -90,10 +115,11 @@ export const AirportBookingWindow = () => {
     }
   };
 
-  const handleSearch = value => {
-    handleInput(SearchToggle.mode, value);
-    updateSearchToggle({ ...SearchToggle, mode: "" });
-  };
+  //   const handleSearch = valueObj => {
+  //     console.log("From Search:- ", JSON.stringify(valueObj));
+  //     // handleInput(SearchToggle.mode, value);
+  //     updateSearchToggle({ ...SearchToggle, mode: "" });
+  //   };
 
   useEffect(() => {
     console.log(BookingState);
@@ -102,7 +128,14 @@ export const AirportBookingWindow = () => {
   return (
     <CenterContainer>
       <FormContainer heading={"Start Your Trip with Rydeu"}>
-        <FormContent handleInput={handleInput} handleSearch={handleSearch} stateData={BookingState} SearchToggle={SearchToggle} />
+        <FormContent
+          handleInput={handleInput}
+          //   handleSearch={handleSearch}
+          stateData={BookingState}
+          SearchToggle={SearchToggle}
+          updateSearchToggle={updateSearchToggle}
+          updateBookingState={updateBookingState}
+        />
       </FormContainer>
     </CenterContainer>
   );
