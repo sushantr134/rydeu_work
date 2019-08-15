@@ -6,7 +6,7 @@ import styles from "./styles.module.scss";
 import { Grid } from "../../common/Grid";
 import { SearchResults } from "../../common/SearchResultsWindow";
 
-const FormContent = ({ handleInput, stateData, SearchToggle }) => {
+const FormContent = ({ handleInput, handleSearch, stateData, SearchToggle }) => {
   return (
     <>
       <div style={{ position: "relative", marginBottom: "1em" }}>
@@ -17,20 +17,26 @@ const FormContent = ({ handleInput, stateData, SearchToggle }) => {
           onchange={handleInput}
           type='text'
           Grouped={true}
+          defaultValue={stateData.fromLocation}
           style={{ paddingLeft: "50px" }}
         />
         <span className={styles.RouteIcon} />
-        {SearchToggle.mode === "fromLocation" && stateData.fromLocation.length > 0 && <SearchResults data={stateData.searchData} />}
+        {SearchToggle.mode === "fromLocation" && stateData.fromLocation.length > 0 && (
+          <SearchResults handleSearch={handleSearch} data={stateData.searchData} />
+        )}
         <Input
           placeholder='To (airport, address)'
           formStateInputType={"toLocation"}
           onchange={handleInput}
           type='text'
           Grouped={true}
+          defaultValue={stateData.toLocation}
           style={{ paddingLeft: "50px" }}
         />
         <span className={styles.ToIcon} />
-        {SearchToggle.mode === "toLocation" && stateData.toLocation.length > 0 && <SearchResults data={stateData.searchData} />}
+        {SearchToggle.mode === "toLocation" && stateData.toLocation.length > 0 && (
+          <SearchResults handleSearch={handleSearch} data={stateData.searchData} />
+        )}
       </div>
 
       <label>Pickup time</label>
@@ -84,13 +90,19 @@ export const AirportBookingWindow = () => {
     }
   };
 
+  const handleSearch = value => {
+    handleInput(SearchToggle.mode, value);
+    updateSearchToggle({ ...SearchToggle, mode: "" });
+  };
+
   useEffect(() => {
     console.log(BookingState);
   });
+
   return (
     <CenterContainer>
       <FormContainer heading={"Start Your Trip with Rydeu"}>
-        <FormContent handleInput={handleInput} stateData={BookingState} SearchToggle={SearchToggle} />
+        <FormContent handleInput={handleInput} handleSearch={handleSearch} stateData={BookingState} SearchToggle={SearchToggle} />
       </FormContainer>
     </CenterContainer>
   );
