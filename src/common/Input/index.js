@@ -1,13 +1,13 @@
 import React from "react";
 import styles from "./styles.module.scss";
 
-export const Input = ({ style, min, max, onchange, Grouped, type, placeholder }) => {
+export const Input = ({ style, min, max, onchange, formStateInputType, Grouped, type, placeholder }) => {
   return (
     <input
       style={style}
       min={min}
       max={max}
-      onChange={onchange}
+      onChange={event => onchange(formStateInputType, event.target.value)}
       className={`${styles.input} ${Grouped === false && styles.individual}`}
       placeholder={placeholder}
       type={type}
