@@ -4,12 +4,11 @@ import { CenterContainer } from "../../containers/CenterContainer";
 import { Input } from "../../common/Input";
 import styles from "./styles.module.scss";
 import { Grid } from "../../common/Grid";
-//import { SearchResults } from "../../common/SearchResultsWindow";
 
 import GoogleMapLoader from "react-google-maps-loader";
 import GooglePlacesSuggest from "react-google-places-suggest";
 
-const FormContent = ({ handleInput, handleSearch, stateData, SearchToggle, updateBookingState, updateSearchToggle }) => {
+const FormContent = ({ handleInput, stateData, SearchToggle, updateBookingState }) => {
   return (
     <>
       <div style={{ position: "relative", marginBottom: "1em" }}>
@@ -28,8 +27,9 @@ const FormContent = ({ handleInput, handleSearch, stateData, SearchToggle, updat
                 }}
                 // Optional props
                 onSelectSuggest={(geocoded, original) => {
+                  console.log(geocoded, original);
                   handleInput(SearchToggle.mode, geocoded.formatted_address);
-                  updateBookingState({ searchText: "" });
+                  //updateBookingState({ searchText: "" });
                 }}>
                 <Input
                   placeholder='From (airport, address)'
@@ -41,9 +41,7 @@ const FormContent = ({ handleInput, handleSearch, stateData, SearchToggle, updat
                   style={{ paddingLeft: "50px" }}
                 />
                 <span className={styles.RouteIcon} />
-                {/* {SearchToggle.mode === "fromLocation" && stateData.fromLocation.length > 0 && (
-                  <SearchResults handleSearch={handleSearch} data={stateData.searchData} />
-                )} */}
+
                 <Input
                   placeholder='To (airport, address)'
                   formStateInputType={"toLocation"}
@@ -54,9 +52,6 @@ const FormContent = ({ handleInput, handleSearch, stateData, SearchToggle, updat
                   style={{ paddingLeft: "50px" }}
                 />
                 <span className={styles.ToIcon} />
-                {/* {SearchToggle.mode === "toLocation" && stateData.toLocation.length > 0 && (
-                  <SearchResults handleSearch={handleSearch} data={stateData.searchData} />
-                )} */}
               </GooglePlacesSuggest>
             )
           }
@@ -89,8 +84,7 @@ export const AirportBookingWindow = () => {
     pickUpTime: "",
     passengers: "",
     luggagePieces: "",
-    searchText: "",
-    searchData: []
+    searchText: ""
   });
 
   const [SearchToggle, updateSearchToggle] = useState({
@@ -107,19 +101,13 @@ export const AirportBookingWindow = () => {
       updateSearchToggle({ mode: "toLocation" });
       updateBookingState({ ...BookingState, searchText: value, toLocation: value });
     } else if (type === "pickUpTime" && value !== undefined) {
-      updateBookingState({ ...BookingState, pickUpTime: value });
+      updateBookingState({ ...BookingState, pickUpTime: value, searchText: "" });
     } else if (type === "passengers" && value !== undefined) {
-      updateBookingState({ ...BookingState, passengers: value });
+      updateBookingState({ ...BookingState, passengers: value, searchText: "" });
     } else if (type === "luggagePieces" && value !== undefined) {
-      updateBookingState({ ...BookingState, luggagePieces: value });
+      updateBookingState({ ...BookingState, luggagePieces: value, searchText: "" });
     }
   };
-
-  //   const handleSearch = valueObj => {
-  //     console.log("From Search:- ", JSON.stringify(valueObj));
-  //     // handleInput(SearchToggle.mode, value);
-  //     updateSearchToggle({ ...SearchToggle, mode: "" });
-  //   };
 
   useEffect(() => {
     console.log(BookingState);
@@ -130,7 +118,6 @@ export const AirportBookingWindow = () => {
       <FormContainer heading={"Start Your Trip with Rydeu"}>
         <FormContent
           handleInput={handleInput}
-          //   handleSearch={handleSearch}
           stateData={BookingState}
           SearchToggle={SearchToggle}
           updateSearchToggle={updateSearchToggle}

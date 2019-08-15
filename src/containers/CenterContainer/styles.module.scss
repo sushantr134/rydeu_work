@@ -2,6 +2,7 @@
 
 .centerContainer {
   width: 100%;
+  padding: 1em;
   @include AlignCenter;
   @include Direction-Col;
   align-items: center;
