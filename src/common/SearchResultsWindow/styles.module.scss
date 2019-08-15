@@ -1,0 +1,26 @@
+@import "../../app.global.scss";
+
+.searchContainer {
+  width: 100%;
+  max-width: 430px;
+  height: 100%;
+  max-height: 600px;
+  overflow-y: auto;
+  position: absolute;
+  padding: 0.5em;
+  background: white;
+  border: 0.1em solid lightgray;
+  z-index: 102;
+  border-radius: 4px;
+
+  ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    li {
+      margin-bottom: 0.55em;
+    }
+  }
+}
