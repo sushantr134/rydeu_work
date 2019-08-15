@@ -1,0 +1,41 @@
+@import "../../app.global.scss";
+
+$height: 30px;
+
+@mixin Common {
+  @include AlignCenter;
+  align-items: center;
+  padding: 0.55em;
+  z-index: 100;
+  left: 0.2%;
+  border-radius: 4px;
+  margin: 0 auto;
+  background: white;
+  position: absolute;
+  opacity: 0.5;
+}
+.FromIcon {
+  @include Common;
+  width: 46px;
+  height: 47.5px;
+  top: 0.5%;
+  background: url(https://cdn-welcomepickup.pressidium.com/wp-content/themes/welcomepickups_new/images/form/departure-icon-20.svg) 50%
+    no-repeat;
+}
+
+.RouteIcon {
+  @include Common;
+  left: 4% !important;
+  width: 20px;
+  height: 20px;
+  top: 35%;
+  background: url(https://cdn-welcomepickup.pressidium.com/wp-content/themes/welcomepickups_new/images/form/arrow-dotted.svg) 50% no-repeat;
+}
+
+.ToIcon {
+  @include Common;
+  width: 46px;
+  height: 40px;
+  top: 48%;
+  background: url(https://cdn-welcomepickup.pressidium.com/wp-content/themes/welcomepickups_new/images/form/google.svg) 50% no-repeat;
+}

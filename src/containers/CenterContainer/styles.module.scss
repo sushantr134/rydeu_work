@@ -1,0 +1,8 @@
+@import "../../app.global.scss";
+
+.centerContainer {
+  width: 100%;
+  @include AlignCenter;
+  @include Direction-Col;
+  align-items: center;
+}

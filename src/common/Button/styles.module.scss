@@ -1,0 +1,28 @@
+@import "../../app.global.scss";
+
+.buttonContainer {
+  padding: 0.8em;
+  @include AlignCenter;
+  align-items: center;
+  border-radius: 4px;
+  border: none;
+  width: 100%;
+  max-height: 56px;
+  height: 56px;
+  cursor: pointer;
+  white-space: nowrap;
+  outline: 0;
+}
+
+a,
+.btnText {
+  text-decoration: none;
+  text-align: center;
+  font-size: $default-btn-text-size;
+  color: $default-btn-text-color;
+}
+
+.success {
+  background: $success-btn-color;
+  transition: background 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
