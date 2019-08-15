@@ -1,15 +1,16 @@
 import React from "react";
 import styles from "./styles.module.scss";
 
-export const Input = props => {
+export const Input = ({ style, min, max, onchange, Grouped, type, placeholder }) => {
   return (
     <input
-      style={props.style}
-      min={props.min}
-      max={props.max}
-      className={`${styles.input} ${props.Grouped === false && styles.individual}`}
-      placeholder={props.placeholder}
-      type={props.type}
+      style={style}
+      min={min}
+      max={max}
+      onChange={onchange}
+      className={`${styles.input} ${Grouped === false && styles.individual}`}
+      placeholder={placeholder}
+      type={type}
     />
   );
 };
